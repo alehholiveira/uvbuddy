@@ -3,11 +3,9 @@
 import { useEffect, useState } from 'react'
 import Image from 'next/image'
 
-// Tipagens
 interface SensorData {
-  value: number
-  timestamp: string
-  entryId: number
+  averageValue: number
+  lastTimestamp: string
 }
 
 interface ChannelInfo {
@@ -16,7 +14,7 @@ interface ChannelInfo {
 }
 
 interface APIResponse {
-  sensorData: SensorData[]
+  sensorData: SensorData
   channelInfo: ChannelInfo
 }
 
@@ -72,18 +70,18 @@ function UVInfo({ uvData }: { uvData: SensorData }) {
     <div className="text-center">
       <h2 className="text-2xl font-semibold mb-6">Índice UV Atual</h2>
       <div className="flex justify-center mb-8">
-        <div className={`${getUVLevelColor(uvData.value)} rounded-full w-32 h-32 flex items-center justify-center`}>
+        <div className={`${getUVLevelColor(uvData.averageValue)} rounded-full w-32 h-32 flex items-center justify-center`}>
           <span className="text-4xl font-bold text-white">
-            {uvData.value.toFixed(1)}
+            {uvData.averageValue.toFixed(1)}
           </span>
         </div>
       </div>
       <div className="space-y-4">
         <p className="text-xl font-medium">
-          Nível UV: {getUVLevelText(uvData.value)}
+          Nível UV: {getUVLevelText(uvData.averageValue)}
         </p>
         <p className="text-gray-500 text-sm">
-          Última atualização: {new Date(uvData.timestamp).toLocaleString('pt-BR')}
+          Última atualização: {new Date(uvData.lastTimestamp).toLocaleString('pt-BR')}
         </p>
       </div>
       <ProtectionTips />
@@ -98,16 +96,18 @@ export default function Home() {
 
   useEffect(() => {
     fetchUVData()
+    const interval = setInterval(fetchUVData, 600000) // 600000 ms = 10 minutos
+    return () => clearInterval(interval)
   }, [])
 
   const fetchUVData = async () => {
     try {
-      const response = await fetch('http://localhost:3333/sensor-data?results=128')
+      const response = await fetch('http://localhost:3333/sensor-data')
       const data: APIResponse = await response.json()
-      const latestReading = data.sensorData
-        .filter(reading => reading.value > 0)
-        .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())[0]
-      setUvData(latestReading)
+      if (!response.ok || !data.sensorData) {
+        throw new Error('Erro ao buscar dados UV')
+      }
+      setUvData(data.sensorData)
       setLoading(false)
     } catch (err) {
       setError('Falha ao buscar dados UV')
