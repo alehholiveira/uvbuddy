@@ -99,6 +99,7 @@ export default function Home() {
   const [uvData, setUvData] = useState<SensorData | null>(null)
   const [hourlyData, setHourlyData] = useState<{ value: number; timestamp: string }[]>([])
   const [loading, setLoading] = useState(true)
+  const [loadingChart, setLoadingChart] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
@@ -113,15 +114,18 @@ export default function Home() {
 
   const fetchHourlyData = async () => {
     try {
+      setLoadingChart(true)
       const response = await fetch('http://localhost:3333/sensor-data/hourly')
       const data: HourlyAPIResponse = await response.json()
       if (!response.ok || !data.formattedData) {
         throw new Error('Erro ao buscar dados UV')
       }
       setHourlyData(data.formattedData)
+      setLoadingChart(false)
     } catch (err) {
       setError('Falha ao buscar dados UV')
       setLoading(false)
+      setLoadingChart(false)
     }
   }
 
@@ -156,8 +160,8 @@ export default function Home() {
           {loading && <Loading />}
           {error && <ErrorMessage message={error} />}
           {uvData && <UVInfo uvData={uvData} />}
-          <h3 className="text-lg font-semibold mb-4 mt-8">Gráfico de Indíce UV - ultima hora</h3>
-          <UVChart data={hourlyData} />
+          <h3 className="text-lg font-semibold mb-4 mt-8">Gráfico de Índice UV - última hora</h3>
+          {loadingChart ? <Loading /> : <UVChart data={hourlyData} />}
         </div>
       </div>
     </main>
