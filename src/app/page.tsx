@@ -2,6 +2,12 @@
 
 import { useEffect, useState } from 'react'
 import Image from 'next/image'
+import UVChart from './components/UVChart'
+
+interface HourlyAPIResponse {
+  formattedData: { value: number; timestamp: string }[]
+  channelInfo: { name: string; description?: string }
+}
 
 interface SensorData {
   averageValue: number
@@ -91,14 +97,33 @@ function UVInfo({ uvData }: { uvData: SensorData }) {
 
 export default function Home() {
   const [uvData, setUvData] = useState<SensorData | null>(null)
+  const [hourlyData, setHourlyData] = useState<{ value: number; timestamp: string }[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     fetchUVData()
-    const interval = setInterval(fetchUVData, 600000) // 600000 ms = 10 minutos
+    fetchHourlyData()
+    const interval = setInterval(() => {
+      fetchUVData()
+      fetchHourlyData()
+    }, 600000) // 600000 ms = 10 minutos
     return () => clearInterval(interval)
   }, [])
+
+  const fetchHourlyData = async () => {
+    try {
+      const response = await fetch('http://localhost:3333/sensor-data/hourly')
+      const data: HourlyAPIResponse = await response.json()
+      if (!response.ok || !data.formattedData) {
+        throw new Error('Erro ao buscar dados UV')
+      }
+      setHourlyData(data.formattedData)
+    } catch (err) {
+      setError('Falha ao buscar dados UV')
+      setLoading(false)
+    }
+  }
 
   const fetchUVData = async () => {
     try {
@@ -131,6 +156,8 @@ export default function Home() {
           {loading && <Loading />}
           {error && <ErrorMessage message={error} />}
           {uvData && <UVInfo uvData={uvData} />}
+          <h3 className="text-lg font-semibold mb-4 mt-8">Gráfico de Indíce UV - ultima hora</h3>
+          <UVChart data={hourlyData} />
         </div>
       </div>
     </main>
