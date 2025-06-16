@@ -1,36 +1,55 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ☀️ UVBuddy - Monitor de Índice UV
 
-## Getting Started
+UVBuddy é uma aplicação web moderna, construída com Next.js, que permite monitorar o índice UV atual e visualizar seu histórico recente. O objetivo é fornecer informações claras e dicas de proteção para ajudar os usuários a se protegerem da radiação UV.
 
-First, run the development server:
+## ✨ Funcionalidades
+
+* **Monitoramento em Tempo Real:** Exibe o índice UV atual com um indicador visual intuitivo (cores e texto de nível: Baixo, Moderado, Alto, Muito Alto, Extremo).
+* **Gráfico de Histórico:** Apresenta um gráfico interativo do índice UV da última hora, utilizando Recharts, para que os usuários possam observar tendências.
+* **Dicas de Proteção:** Oferece sugestões importantes de como se proteger do sol com base no nível UV.
+* **Atualização Automática:** Os dados são atualizados a cada 10 minutos para garantir informações recentes.
+* **Design Responsivo:** Construído com Tailwind CSS para garantir uma experiência de usuário agradável em diferentes dispositivos.
+
+## 🚀 Primeiros Passos
+
+Para configurar e executar o projeto localmente:
+
+### Pré-requisitos
+
+Certifique-se de ter o [Node.js](https://nodejs.org/) (versão 18.18.0 ou superior) e um gerenciador de pacotes como `npm`, `yarn`, `pnpm` ou `bun` instalados.
+
+### Instalação
+
+1.  Clone o repositório:
+    ```bash
+    git clone [https://github.com/alehholiveira/uvbuddy.git](https://github.com/alehholiveira/uvbuddy.git)
+    cd uvbuddy
+    ```
+2.  Instale as dependências:
+    ```bash
+    npm install
+    # ou
+    yarn install
+    # ou
+    pnpm install
+    # ou
+    bun install
+    ```
+
+### Executando o Servidor de Desenvolvimento
+
+Inicie o servidor de desenvolvimento com hot-reloading:
 
 ```bash
 npm run dev
-# or
+# ou
 yarn dev
-# or
+# ou
 pnpm dev
-# or
+# ou
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Abra (http://localhost:3000) no seu navegador para ver a aplicação em funcionamento. A página será atualizada automaticamente conforme você edita os arquivos.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+`Nota`: Esta aplicação front-end consome dados de um servidor backend. Para que os dados sejam exibidos corretamente, você precisará ter o backend em execução. O projeto do backend está disponível em: (https://github.com/alehholiveira/apinode). A aplicação front-end espera que o backend esteja acessível em (http://localhost:3333).
